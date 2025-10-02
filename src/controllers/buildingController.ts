@@ -1,5 +1,6 @@
 import express from "express"
 import Building from "../models/building.ts"
+import Location from "../models/location.ts";
 
 
 const createBuilding = async (req: express.Request, res: express.Response) => { 
@@ -12,10 +13,30 @@ const createBuilding = async (req: express.Request, res: express.Response) => {
     }
 }
 
+const addBuildingToLocation = async (req: express.Request, res: express.Response) => {
+    try{
+        const building = await Building.findById(req.params.bid);
+        const location = await Location.findById(req.params.lid);
+        console.log("Building " + building + " Location " + location )
+        if(!building){
+            res.status(404).json({error: "Building not found"})
+        } else if(!location){
+            res.status(404).json({error: "Cannot find location"})
+        }
+        location.buildings = building
+        res.status(200).json(location)
+        await location.save();
+    } catch (error){
+        console.error("Error linking buildings:", error)
+        res.status(500).json({error: "Internal server error"})
+    }
+}
+
 const getAllBuildings = async (req: express.Request, res: express.Response) => {
     try {
-        const buildings = await Building.find();
-        res.status(200).json(buildings);
+        await Building.find().populate('offices').then((buildings)=>{
+            res.json(buildings)
+        });
     } catch (error) {
         console.error("Error fetching buildings:", error);
         res.status(500).json({ error: "Internal server error" });
@@ -64,6 +85,7 @@ const deleteBuilding = async (req: express.Request, res: express.Response) => {
 
 export default {
     createBuilding,
+    addBuildingToLocation,
     getAllBuildings,
     getBuildingById,
     updateBuilding,

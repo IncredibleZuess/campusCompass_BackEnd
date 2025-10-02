@@ -4,14 +4,20 @@ import helper from "../utils/helper.ts"
 import RefreshToken from "../models/refreshToken.ts"
 import express from "express"
 const register = async (req: express.Request, res: express.Response) => {
-    const { username, password } = req.body
+    try{
+        const { username, password } = req.body
         const passwordHash = await helper.hashPassword(password)
         const admin = new Account({ username, password: passwordHash })
         await admin.save()
         res.status(201).send("Admin registered successfully.")
+    } catch (err){
+        res.status(500).json({error: "Error registering admin user"})
+    }
+    
 }
 
 const login = async (req: express.Request, res: express.Response) => {
+    try{
         const {username, password} = req.body
         const admin = await Account.findOne({ username })
         if (!admin) {
@@ -24,6 +30,10 @@ const login = async (req: express.Request, res: express.Response) => {
         const accessToken = helper.issueAccessToken({ id: admin._id })
         const refreshToken = await helper.createRefreshToken(admin._id)
         res.status(200).json({ accessToken, refreshToken })
+    }catch (err){
+        res.status(500).json({error: "Error with admin login"})
+    }
+        
     }
 
 const refreshToken = async (req: express.Request, res: express.Response) => {
