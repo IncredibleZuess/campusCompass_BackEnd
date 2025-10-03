@@ -52,9 +52,10 @@ const router = express.Router()
  * */
 router.get("/", buildingController.getAllBuildings);
 router.get("/:id", buildingController.getBuildingById);
-router.post("/", passport.authenticate("jwt", { session: false }), buildingController.createBuilding);
+router.post("/", buildingController.createBuilding);
 router.post("/:bid/location/:lid", passport.authenticate("jwt", {session: false}), buildingController.addBuildingToLocation)
 router.post("/:id/image", upload.single('image'), buildingController.uploadBuildingImage)
+router.post('/upload', upload.single('file'), buildingController.uploadImage)
 router.put("/:id", passport.authenticate("jwt", { session: false }), buildingController.updateBuilding);
 router.delete("/:id", passport.authenticate("jwt", { session: false }), buildingController.deleteBuilding);
 

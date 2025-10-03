@@ -12,6 +12,7 @@ const addOffice = async (req: express.Request, res: express.Response) => {
     }
 }
 
+
 const addOfficeToBuilding = async (req: express.Request, res: express.Response) => {
     try{
         const office = await Office.findById(req.params.oid);
