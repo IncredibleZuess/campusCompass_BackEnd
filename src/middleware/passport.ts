@@ -4,8 +4,17 @@ import passportHttp from "passport-http"
 import Admin from "../models/admin.ts";
 import helper from "../utils/helper.ts"
 
+const extractFromCookie = (req) => {
+    let jwt = null
+
+    if (req && req.cookies){
+        jwt = req.cookies['accessToken']
+    }
+    return jwt
+}
+
 const options = {
-    jwtFromRequest: passportJwt.ExtractJwt.fromAuthHeaderAsBearerToken(),
+    jwtFromRequest: extractFromCookie,
     secretOrKey: process.env.SECRET
 }
 

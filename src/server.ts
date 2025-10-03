@@ -4,6 +4,7 @@ import swaggerJSDoc from "swagger-jsdoc"
 import express from "express"
 import session from "express-session"
 import bodyParser from "body-parser"
+import cors from "cors"
 import cookieParser from "cookie-parser"
 import locationsRoute from "./routes/locationRoute.ts"
 import buildingRoute from "./routes/buildingRoute.ts"
@@ -47,6 +48,10 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'default-secret-key',
   resave: false,
   saveUninitialized: false
+}))
+app.use(cors({
+  origin: ["http://localhost:3000", "http://localhost:5173", "192.168.1.4:3000", "192.168.1.4:5173"],
+  credentials: true
 }))
 app.use(cookieParser())
 app.use(bodyParser.json())

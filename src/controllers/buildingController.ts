@@ -1,6 +1,7 @@
 import express from "express"
 import Building from "../models/building.ts"
 import Location from "../models/location.ts";
+import Image from "../models/image.ts";
 
 
 const createBuilding = async (req: express.Request, res: express.Response) => { 
@@ -34,7 +35,7 @@ const addBuildingToLocation = async (req: express.Request, res: express.Response
 
 const getAllBuildings = async (req: express.Request, res: express.Response) => {
     try {
-        await Building.find().populate('offices').then((buildings)=>{
+        await Building.find().populate('offices').populate('image').then((buildings)=>{
             res.json(buildings)
         });
     } catch (error) {
@@ -67,6 +68,24 @@ const updateBuilding = async (req: express.Request, res: express.Response) => {
         console.error("Error updating building:", error);
         res.status(500).json({ error: "Internal server error" });
     }
+}
+
+const uploadBuildingImage = async (req: express.Request, res: express.Response) => {
+    try{
+        const building = await Building.findById(req.params.id)
+        const image = await Image.create(req.body)
+        if (!building){
+            return res.status(404).json({error: "Building not found"})
+        }
+        building.image = image
+        res.status(200).json(building)
+        await building.save()
+    } catch (error) {
+        console.error("Error adding image to Building", error)
+        res.status(500).json({error: "Internal server error"})
+    }
+
+    
 }
 
 const deleteBuilding = async (req: express.Request, res: express.Response) => {
