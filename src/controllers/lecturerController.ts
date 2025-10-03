@@ -1,5 +1,6 @@
 import express from "express"
 import Lecturer from "../models/lecturer.ts"
+import Office from "../models/office.ts";
 
 const addLecturer = async (req: express.Request, res: express.Response) => {
     try {
@@ -9,6 +10,25 @@ const addLecturer = async (req: express.Request, res: express.Response) => {
         console.error("Error creating lecturer:", error);
         res.status(500).json({ error: "Internal server error" });
     }
+}
+
+const addLecturerToOffice = async (req: express.Request, res: express.Response) => {
+    try{
+        const lecturer = await Lecturer.findById(req.params.lid);
+        const office = await Office.findById(req.params.oid);
+        if(!lecturer){
+            res.status(404).json({error: "Lecturer record not found"})
+        } else if (!office){
+            res.status(404).json({error: "Could not find office record"})
+        }
+        office.lecturers = lecturer
+        res.status(200).json(office)
+        await office.save()
+    } catch(error){
+        console.error("Error linking Lecturer to office", error)
+        res.status(500).json({error: "Internal server error"})
+    }
+    
 }
 
 const getAllLecturers = async (req: express.Request, res: express.Response) => {
@@ -62,6 +82,7 @@ const deleteLecturer = async (req: express.Request, res: express.Response) => {
 
 export default {
     addLecturer,
+    addLecturerToOffice,
     getAllLecturers,
     getLecturerById,
     updateLecturer,

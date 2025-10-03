@@ -62,7 +62,6 @@ const building = Array.from({ length: 20 }).map(() => ({
   name: faker.company.name(),
   lat: faker.location.latitude(),
   lng: faker.location.longitude(),
-  floors: faker.number.int({ min: 1, max: 3 }),
   offices: faker.helpers.arrayElements([faker.database.mongodbObjectId(), faker.database.mongodbObjectId(), faker.database.mongodbObjectId()]),
 }));
 

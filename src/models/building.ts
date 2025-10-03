@@ -4,8 +4,8 @@ const buildingSchema = new mongoose.Schema({
     name: { type: String, required: true },
     lat: { type: Number, required: true },
     lng: { type: Number, required: true },
-    floors: { type: Number, required: true },
     offices: [{ type: mongoose.Schema.Types.ObjectId, ref: "Office" }],
+    image: {type: mongoose.Schema.Types.ObjectId, ref: "Image"}
 }, { timestamps: true })
 
 const Building = mongoose.model("Building", buildingSchema);

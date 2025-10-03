@@ -15,8 +15,9 @@ const addLocation = async (req: express.Request, res: express.Response) => {
 
 }
 
-const getAllLocations =  (req: express.Request, res: express.Response) => {
-    Location.find().then((locations) => {
+const getAllLocations =async  (req: express.Request, res: express.Response) => {
+    await Location.find().populate("buildings").then((locations) => {
+        console.log(locations)
         res.json(locations);
     }).catch((error) => {
         console.error("Error fetching locations:", error);
@@ -56,7 +57,7 @@ const deleteLocation = (req: express.Request, res: express.Response)=>{
         if (!location) {
             return res.status(404).json({ error: "Location not found" });
         }
-        res.json({ message: "Location deleted successfully" });
+        res.status(204).json({ message: "Location deleted successfully" })
 
     }).catch((error)=>{
         console.error("Error deleting location:", error);
