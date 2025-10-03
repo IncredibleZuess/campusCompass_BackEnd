@@ -105,6 +105,7 @@ const deleteBuilding = async (req: express.Request, res: express.Response) => {
 export default {
     createBuilding,
     addBuildingToLocation,
+    uploadBuildingImage,
     getAllBuildings,
     getBuildingById,
     updateBuilding,
